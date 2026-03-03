@@ -40,7 +40,7 @@ const ChatScreen = () => {
       const newMessage = {
         messageId: uuid(),
         text,
-        userId: currentUserId,
+        userId: currentUserId.current,
         groupId: groupId, // Include the groupId in the message
         date: new Date().getTime().toString(), // Add a date field for sorting
       };
@@ -63,7 +63,7 @@ const ChatScreen = () => {
     <View style={styles.container}>
       <MessagesContainer
         messages={messages}
-        currentUserId={currentUserId}
+        currentUserId={currentUserId.current}
       />
       <MessageBar onSend={handleSend} />
     </View>
