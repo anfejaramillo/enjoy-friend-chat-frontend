@@ -1,11 +1,14 @@
-import React, { useRef } from "react";
+import React from "react";
 
-var initialLoad = useRef(true);
-var socket = useRef<WebSocket | null>(null);
-const myConnectionIdRef = useRef<string | null>(null); // Ref to store the current user's connection ID
+//var initialLoad = useRef(true);
+//var socket = useRef<WebSocket | null>(null);
+//const myConnectionIdRef = useRef<string | null>(null); // Ref to store the current user's connection ID
 export function initializeWebSocket(
     setMessages: React.Dispatch<React.SetStateAction<Array<{ messageId: string; text: string; userId: string, groupId: string }>>>,
-    groupId: string
+    groupId: string,
+    initialLoad: React.RefObject<boolean>,
+    socket: React.RefObject<WebSocket | null>,
+    myConnectionIdRef: React.RefObject<string | null>
 )
     : WebSocket {
     // WebSocket connection URL

@@ -8,6 +8,8 @@ interface MessagesContainerProps {
 }
 
 const MessagesContainer = ({ messages, currentUserId }: MessagesContainerProps) => {
+  console.log("Rendering MessagesContainer with messages:", messages);
+  console.log("Current user ID:", currentUserId);
   return (
     <View style={styles.container}>
       <FlatList
