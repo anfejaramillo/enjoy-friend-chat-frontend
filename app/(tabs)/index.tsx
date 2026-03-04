@@ -1,5 +1,5 @@
 import { Image } from 'expo-image';
-import { Button, StyleSheet, TextInput, View } from 'react-native';
+import { Button, Pressable, StyleSheet, TextInput, View } from 'react-native';
 
 import { HelloWave } from '@/components/hello-wave';
 import ParallaxScrollView from '@/components/parallax-scroll-view';
@@ -10,10 +10,26 @@ import { useRouter } from 'expo-router';
 import { useState } from 'react';
 
 export default function HomeScreen() {
-
   const router = useRouter();
+  const [groupId, setGroupId] = useState<string>('');
 
-  const [groupId, setGroupId] = useState<string | null>(null); // Simulate group ID state
+  const goToChat = (id: string) => {
+    if (!id) {
+      alert('Please enter a valid group ID or choose a sample group.');
+      return;
+    }
+
+    // Navigate to the dynamic chat route using the groupId as a param
+    // This pushes to `/chat/[groupId]` and supplies the param so the chat page can read it
+    router.push(
+      {
+        pathname: '/chat',
+        params: { groupId: id }
+      }
+    );
+  };
+
+  const sampleGroups = ['friends', 'react-native', 'general'];
 
   return (
     <ParallaxScrollView
@@ -24,35 +40,67 @@ export default function HomeScreen() {
           style={styles.reactLogo}
         />
       }>
+
       <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
+        <ThemedText type="title">Enjoy Chat Friends — Overview</ThemedText>
         <HelloWave />
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it!</ThemedText>
+
+      <ThemedView style={styles.section}>
+        <ThemedText type="subtitle">What this project does</ThemedText>
         <ThemedText>
-          Fill the "Group Name" to join to group's chat!!!
+          This is a small, serverless chat demo built with Expo and React Native. Key features:
+        </ThemedText>
+        <ThemedText>- Real-time messaging via WebSocket abstraction.</ThemedText>
+        <ThemedText>- Per-group chat rooms identified by a groupId.</ThemedText>
+        <ThemedText>- Message bubbles with sender names, timestamps and responsive wrapping.</ThemedText>
+        <ThemedText>- Cross-platform UI using themed components and Expo Router for navigation.</ThemedText>
+      </ThemedView>
+
+      <ThemedView style={styles.section}>
+        <ThemedText type="subtitle">How to join a chat</ThemedText>
+        <ThemedText>
+          Enter a Group ID below (any short string) and tap "Join". You can also tap one of the sample groups.
+        </ThemedText>
+
+        <View style={styles.joinRow}>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter Group ID (e.g. friends)"
+            placeholderTextColor="gray"
+            value={groupId}
+            onChangeText={setGroupId}
+          />
+          <Button title="Join" onPress={() => goToChat(groupId)} />
+        </View>
+
+        <View style={styles.sampleList}>
+          {sampleGroups.map((g) => (
+            <Pressable key={g} onPress={() => goToChat(g)} style={styles.sampleButton}>
+              <ThemedText style={styles.sampleButtonText}>{`Open chat: ${g}`}</ThemedText>
+            </Pressable>
+          ))}
+        </View>
+      </ThemedView>
+
+
+      <ThemedView style={styles.section}>
+        <ThemedText type="subtitle">Security considerations</ThemedText>
+        <ThemedText>
+          The content of your chat messages is stored and is avialable to be find FOR ANYONE that put the same GroupID that you just put.
+          Do not share confidential information in the chat, as it is not private and is only meant for demonstration purposes. 
+          The serverless backend is designed for simplicity and does not implement authentication or access controls for the shared messages.
         </ThemedText>
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore through Click on Join button!</ThemedText>
+
+      <ThemedView style={styles.section}>
+        <ThemedText type="subtitle">Developer notes</ThemedText>
         <ThemedText>
-          Group Name to join to their chat:
-          <View>
-            <TextInput style={styles.input} placeholder="Enter Group Name" placeholderTextColor="gray" value={groupId || ''} onChangeText={setGroupId} />
-            <Button title={"Join"} onPress={() => {
-              if (groupId) {
-                router.push({
-                  pathname: "/chat/[groupId]",
-                  params: { "groupId" : groupId }
-                })
-              }else{
-                alert("Please enter a group name to join the chat.");
-              }
-            }}></Button>
-          </View>
+          The chat route is implemented under `app/chat?groupId=X`. The chat page receives the
+          `groupId` param from the router and uses it to join the correct WebSocket channel.
         </ThemedText>
       </ThemedView>
+
     </ParallaxScrollView>
   );
 }
@@ -63,9 +111,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
   },
-  stepContainer: {
+  section: {
     gap: 8,
-    marginBottom: 8,
+    marginBottom: 12,
   },
   reactLogo: {
     height: 178,
@@ -74,13 +122,35 @@ const styles = StyleSheet.create({
     left: 0,
     position: 'absolute',
   },
+  joinRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 8,
+  },
+  sampleList: {
+    flexDirection: 'row',
+    gap: 8,
+    marginTop: 8,
+  },
+  sampleButton: {
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    backgroundColor: '#e5e5ea',
+    borderRadius: 8,
+    marginRight: 8,
+    color: '#333',
+  },
+  sampleButtonText: {
+    color: '#666',
+    fontWeight: '600',
+  },
   input: {
+    flex: 1,
     height: 40,
     borderColor: 'gray',
     borderWidth: 1,
-    marginTop: 8,
     paddingHorizontal: 8,
     backgroundColor: 'lightgray',
-    borderBlockColor: 'gray'
-  }
+  },
 });

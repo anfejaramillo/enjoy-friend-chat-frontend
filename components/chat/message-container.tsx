@@ -3,7 +3,7 @@ import { FlatList, StyleSheet, View } from "react-native";
 import MessageBubble from "./message-bubble";
 
 interface MessagesContainerProps {
-  messages: Array<{ messageId: string; text: string; userId: string, groupId: string }>;
+  messages: Array<{ messageId: string; text: string; userId: string, groupId: string, date: string }>;
   currentUserId: string;
 }
 
@@ -19,6 +19,8 @@ const MessagesContainer = ({ messages, currentUserId }: MessagesContainerProps) 
           <MessageBubble
             message={item.text}
             isOwn={item.userId === currentUserId}
+            originalUserId={item.userId}
+            messageDate={new Date(Number.parseInt(item.date)).toLocaleString()} // Format the date as needed
           />
         )}
         contentContainerStyle={{ paddingVertical: 10 }}

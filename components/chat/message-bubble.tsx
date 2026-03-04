@@ -1,7 +1,9 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
+import MessageHeader from "./message-header";
 
-const MessageBubble = ({ message, isOwn }: { message: string; isOwn: boolean }) => {
+const MessageBubble = ({ message, isOwn, originalUserId, messageDate }: { message: string; isOwn: boolean; originalUserId: string; messageDate: string }) => {
+  console.log("Rendering MessageBubble with message:", message, "isOwn:", isOwn, "originalUserId:", originalUserId, "messageDate:", messageDate);
   return (
     <View
       style={[
@@ -9,13 +11,16 @@ const MessageBubble = ({ message, isOwn }: { message: string; isOwn: boolean }) 
         isOwn ? styles.rightContainer : styles.leftContainer,
       ]}
     >
-      <View
-        style={[
-          styles.bubble,
-          isOwn ? styles.rightBubble : styles.leftBubble,
-        ]}
-      >
-        <Text style={styles.text}>{message}</Text>
+      <View style={[styles.messageWrapper, isOwn && styles.messageWrapperRight]}>
+        <MessageHeader originalUserId={originalUserId} messageDate={messageDate} />
+        <View
+          style={[
+            styles.bubble,
+            isOwn ? styles.rightBubble : styles.leftBubble,
+          ]}
+        >
+          <Text style={[styles.text, isOwn && styles.textRight]}>{message}</Text>
+        </View>
       </View>
     </View>
   );
@@ -33,8 +38,29 @@ const styles = StyleSheet.create({
   rightContainer: {
     justifyContent: "flex-end",
   },
+  messageWrapper: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+    width: "80%",
+  },
+  messageWrapperRight: {
+    alignItems: "flex-end",
+  },
+  headerRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 4,
+    gap: 8,
+  },
+  senderName: {
+    fontSize: 12,
+    color: "#666",
+  },
+  messageDate: {
+    fontSize: 10,
+    color: "#999",
+  },
   bubble: {
-    maxWidth: "75%",
     padding: 10,
     borderRadius: 15,
   },
@@ -45,10 +71,13 @@ const styles = StyleSheet.create({
   rightBubble: {
     backgroundColor: "#007AFF",
     borderTopRightRadius: 0,
-    color: "#fff",
   },
   text: {
     color: "#000",
+    flexWrap: "wrap",
+  },
+  textRight: {
+    color: "#fff",
   },
 });
 

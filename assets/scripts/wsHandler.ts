@@ -4,7 +4,7 @@ import React from "react";
 //var socket = useRef<WebSocket | null>(null);
 //const myConnectionIdRef = useRef<string | null>(null); // Ref to store the current user's connection ID
 export function initializeWebSocket(
-    setMessages: React.Dispatch<React.SetStateAction<Array<{ messageId: string; text: string; userId: string, groupId: string }>>>,
+    setMessages: React.Dispatch<React.SetStateAction<Array<{ messageId: string; text: string; userId: string, groupId: string, date: string }>>>,
     groupId: string,
     initialLoad: React.RefObject<boolean>,
     socket: React.RefObject<WebSocket | null>,
@@ -20,6 +20,7 @@ export function initializeWebSocket(
         socket.current.onopen = () => {
             console.log('WebSocket connected.');
             if (initialLoad.current) {
+                //console.log("Requesting messages for groupId:", groupId);
                 socket.current?.send(JSON.stringify({
                     //type: "getMessagesByGroupId",
                     action: "getMessagesByGroupId",
@@ -54,14 +55,14 @@ export function initializeWebSocket(
                     break;
                 case "getMessagesByGroupId":
                     // Update the state with the messages for the group
-                    if(!data.payload || !Array.isArray(data.payload)) {
+                    if (!data.payload || !Array.isArray(data.payload)) {
                         console.warn("Received invalid payload for getMessagesByGroupId:", data.payload);
                         break;
                     }
-                    let orderedMessages = data.payload.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
-                    console.log("Ordered messages:", orderedMessages);
+                    //console.log("Received messages for group:", data.payload);
+                    let orderedMessages = data.payload.sort((a: any, b: any) => Number.parseInt(b.date) - Number.parseInt(a.date));
+                    //console.log("Ordered messages:", orderedMessages);
                     setMessages(orderedMessages);
-                    // console.log("Received messages for group:", data.payload);
                     // setMessages(data.payload);
                     break;
                 default:
