@@ -18,6 +18,8 @@ jobs:
         npm install
         npm install expo-cli --global
         npm run export-web
+        ls -la
+        ls -la dist
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v4.3.1
       with:
