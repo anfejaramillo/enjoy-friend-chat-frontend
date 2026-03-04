@@ -28,4 +28,4 @@ jobs:
       run: |
         cd $(pwd)
         ls
-        aws s3 sync $(pwd)/dist ${{ secrets.AWS_S3_BUCKET }} --delete
+        aws s3 sync $(pwd)/dist ${{ secrets.AWS_S3_BUCKET }} --delete --debug
