@@ -1,0 +1,28 @@
+name: build and push
+on:
+  push:
+    branches:
+    - main
+jobs:
+  buildWebApp:
+    name: Build web app to deploy on production
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js 24.13
+      uses: actions/setup-node@v4
+      with:
+        node-version: "24.13"
+    - name: npm install and build
+      run: |
+        npm install
+        npm install expo-cli --global
+        npm run export-web
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v4.3.1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+    - name: Uploading content to S3 Bucket
+      run: aws s3 sync dist ${{ secrets.AWS_S3_BUCKET }} --delete

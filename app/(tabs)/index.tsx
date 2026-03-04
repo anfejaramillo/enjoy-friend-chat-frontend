@@ -87,9 +87,9 @@ export default function HomeScreen() {
       <ThemedView style={styles.section}>
         <ThemedText type="subtitle">Security considerations</ThemedText>
         <ThemedText>
-          The content of your chat messages is stored and is avialable to be find FOR ANYONE that put the same GroupID that you just put.
+          "The content of your chat messages is stored and is avialable to be find FOR ANYONE that put the same GroupID that you just put.
           Do not share confidential information in the chat, as it is not private and is only meant for demonstration purposes. 
-          The serverless backend is designed for simplicity and does not implement authentication or access controls for the shared messages.
+          The serverless backend is designed for simplicity and does not implement authentication or access controls for the shared messages."
         </ThemedText>
       </ThemedView>
 
